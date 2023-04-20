@@ -74,27 +74,32 @@ module control_unit(
             mem_read  = 1'b0;
             mem_write = 1'b0;
             branch    = 1'b0;
+<<<<<<< HEAD
             alu_op    = R_TYPE_OPCODE;
             jump      = 1'b1;
+=======
+            alu_op    = ADD_OPCODE;
+            jump      = 1'b0;
+>>>>>>> a1687992cc1d08cc2fd7c7662e25faf60c04af12
          end
 
 	LOAD:begin
-            alu_src   = 1'b0;
-            mem_2_reg = 1'b0;
+            alu_src   = 1'b1;
+            mem_2_reg = 1'b1;
             reg_write = 1'b1;
-            mem_read  = 1'b0;
+            mem_read  = 1'b1;
             mem_write = 1'b0;
             branch    = 1'b0;
-            alu_op    = R_TYPE_OPCODE;
+            alu_op    = ADD_OPCODE;
             jump      = 1'b0;
          end
 
 	STORE:begin
-            alu_src   = 1'b0;
-            mem_2_reg = 1'b0;
-            reg_write = 1'b1;
+            alu_src   = 1'b1;
+            mem_2_reg = 1'bx;
+            reg_write = 1'b0;
             mem_read  = 1'b0;
-            mem_write = 1'b0;
+            mem_write = 1'b1;
             branch    = 1'b0;
             alu_op    = R_TYPE_OPCODE;
             jump      = 1'b0;
