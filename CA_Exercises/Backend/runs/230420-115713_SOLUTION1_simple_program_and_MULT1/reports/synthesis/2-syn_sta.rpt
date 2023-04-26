@@ -1,0 +1,150 @@
+
+===========================================================================
+report_checks -unconstrained
+
+======================= Typical Corner ===================================
+
+Startpoint: arst_n (input port clocked by clk)
+Endpoint: program_counter.pc_register._262_
+          (recovery check against rising-edge clock clk)
+Path Group: asynchronous
+Path Type: max
+
+Fanout     Cap    Slew   Delay    Time   Description
+-----------------------------------------------------------------------------
+                  0.15    0.00    0.00   clock clk (rise edge)
+                          0.00    0.00   clock network delay (ideal)
+                          0.00    0.00 ^ input external delay
+                 32.13   23.05   23.05 ^ arst_n (in)
+  1993    7.20                           arst_n (net)
+                 32.13    0.00   23.05 ^ program_counter.pc_register._262_/RESET_B (sky130_fd_sc_hd__dfrtp_2)
+                                 23.05   data arrival time
+
+                  0.15  100.00  100.00   clock clk (rise edge)
+                          0.00  100.00   clock network delay (ideal)
+                         -0.25   99.75   clock uncertainty
+                          0.00   99.75   clock reconvergence pessimism
+                                 99.75 ^ program_counter.pc_register._262_/CLK (sky130_fd_sc_hd__dfrtp_2)
+                        -10.66   89.09   library recovery time
+                                 89.09   data required time
+-----------------------------------------------------------------------------
+                                 89.09   data required time
+                                -23.05   data arrival time
+-----------------------------------------------------------------------------
+                                 66.04   slack (MET)
+
+
+Startpoint: instruction_memory.process_for_mem[0].dram_inst
+            (falling edge-triggered flip-flop clocked by clk')
+Endpoint: data_memory.process_for_mem[0].spad_inst
+          (falling edge-triggered flip-flop clocked by clk')
+Path Group: clk
+Path Type: max
+
+Fanout     Cap    Slew   Delay    Time   Description
+-----------------------------------------------------------------------------
+                  0.15    0.00    0.00   clock clk' (fall edge)
+                          0.00    0.00   clock network delay (ideal)
+                  0.15    0.00    0.00 v instruction_memory.process_for_mem[0].dram_inst/clk0 (sky130_sram_2rw_32x128_32)
+                  0.01    0.34    0.34 ^ instruction_memory.process_for_mem[0].dram_inst/dout0[22] (sky130_sram_2rw_32x128_32)
+     4    0.01                           immediate_extend_u.instruction[22] (net)
+                  0.00    0.00    0.34 ^ register_file._08130_/A (sky130_fd_sc_hd__buf_1)
+                  0.68    0.53    0.87 ^ register_file._08130_/X (sky130_fd_sc_hd__buf_1)
+    24    0.06                           register_file._03239_ (net)
+                  0.68    0.00    0.87 ^ register_file._08164_/C (sky130_fd_sc_hd__or3_2)
+                  0.08    0.28    1.15 ^ register_file._08164_/X (sky130_fd_sc_hd__or3_2)
+     7    0.01                           register_file._03273_ (net)
+                  0.08    0.00    1.15 ^ register_file._08165_/B (sky130_fd_sc_hd__or2_2)
+                  0.03    0.11    1.26 ^ register_file._08165_/X (sky130_fd_sc_hd__or2_2)
+     1    0.00                           register_file._03274_ (net)
+                  0.03    0.00    1.26 ^ register_file._08166_/A (sky130_fd_sc_hd__buf_1)
+                  0.30    0.26    1.53 ^ register_file._08166_/X (sky130_fd_sc_hd__buf_1)
+     7    0.03                           register_file._03275_ (net)
+                  0.30    0.00    1.53 ^ register_file._08883_/A (sky130_fd_sc_hd__buf_1)
+                  1.07    0.88    2.40 ^ register_file._08883_/X (sky130_fd_sc_hd__buf_1)
+    20    0.09                           register_file._03972_ (net)
+                  1.07    0.00    2.40 ^ register_file._08921_/A2 (sky130_fd_sc_hd__o2111ai_2)
+                  0.13    0.13    2.54 v register_file._08921_/Y (sky130_fd_sc_hd__o2111ai_2)
+     1    0.00                           register_file._04009_ (net)
+                  0.13    0.00    2.54 v register_file._08929_/C (sky130_fd_sc_hd__or4_2)
+                  0.09    0.64    3.18 v register_file._08929_/X (sky130_fd_sc_hd__or4_2)
+     1    0.00                           register_file._04017_ (net)
+                  0.09    0.00    3.18 v register_file._08938_/A (sky130_fd_sc_hd__or4_2)
+                  0.09    0.69    3.87 v register_file._08938_/X (sky130_fd_sc_hd__or4_2)
+     1    0.00                           register_file._04026_ (net)
+                  0.09    0.00    3.87 v register_file._08939_/A (sky130_fd_sc_hd__buf_1)
+                  0.06    0.14    4.01 v register_file._08939_/X (sky130_fd_sc_hd__buf_1)
+     2    0.01                           alu_operand_mux.input_b[21] (net)
+                  0.06    0.00    4.01 v alu_operand_mux._111_/A0 (sky130_fd_sc_hd__mux2_2)
+                  0.05    0.27    4.28 v alu_operand_mux._111_/X (sky130_fd_sc_hd__mux2_2)
+     1    0.00                           alu_operand_mux._023_ (net)
+                  0.05    0.00    4.28 v alu_operand_mux._112_/A (sky130_fd_sc_hd__buf_1)
+                  0.14    0.18    4.46 v alu_operand_mux._112_/X (sky130_fd_sc_hd__buf_1)
+     5    0.02                           alu.alu_in_1[21] (net)
+                  0.14    0.00    4.46 v alu._2195_/B (sky130_fd_sc_hd__or4_2)
+                  0.09    0.68    5.14 v alu._2195_/X (sky130_fd_sc_hd__or4_2)
+     1    0.00                           alu._1401_ (net)
+                  0.09    0.00    5.14 v alu._2198_/B (sky130_fd_sc_hd__or4_2)
+                  0.09    0.66    5.80 v alu._2198_/X (sky130_fd_sc_hd__or4_2)
+     1    0.00                           alu._1404_ (net)
+                  0.09    0.00    5.80 v alu._2207_/A (sky130_fd_sc_hd__or4_2)
+                  0.09    0.69    6.49 v alu._2207_/X (sky130_fd_sc_hd__or4_2)
+     1    0.00                           alu._1413_ (net)
+                  0.09    0.00    6.49 v alu._2208_/A (sky130_fd_sc_hd__buf_1)
+                  0.11    0.19    6.68 v alu._2208_/X (sky130_fd_sc_hd__buf_1)
+    13    0.02                           alu._1414_ (net)
+                  0.11    0.00    6.68 v alu._2223_/A (sky130_fd_sc_hd__buf_1)
+                  0.24    0.30    6.98 v alu._2223_/X (sky130_fd_sc_hd__buf_1)
+    30    0.04                           alu._1429_ (net)
+                  0.24    0.00    6.98 v alu._2239_/C (sky130_fd_sc_hd__or3_2)
+                  0.12    0.56    7.54 v alu._2239_/X (sky130_fd_sc_hd__or3_2)
+     8    0.01                           alu._1445_ (net)
+                  0.12    0.00    7.54 v alu._2242_/A2 (sky130_fd_sc_hd__mux4_2)
+                  0.09    0.51    8.05 v alu._2242_/X (sky130_fd_sc_hd__mux4_2)
+     3    0.01                           alu._1448_ (net)
+                  0.09    0.00    8.05 v alu._2244_/A1 (sky130_fd_sc_hd__mux2_2)
+                  0.06    0.31    8.36 v alu._2244_/X (sky130_fd_sc_hd__mux2_2)
+     3    0.01                           alu._1450_ (net)
+                  0.06    0.00    8.36 v alu._2654_/A0 (sky130_fd_sc_hd__mux2_2)
+                  0.05    0.27    8.63 v alu._2654_/X (sky130_fd_sc_hd__mux2_2)
+     1    0.00                           alu._0034_ (net)
+                  0.05    0.00    8.63 v alu._2655_/A3 (sky130_fd_sc_hd__mux4_2)
+                  0.08    0.47    9.10 v alu._2655_/X (sky130_fd_sc_hd__mux4_2)
+     1    0.00                           alu._0035_ (net)
+                  0.08    0.00    9.10 v alu._2656_/B1 (sky130_fd_sc_hd__o32a_2)
+                  0.05    0.20    9.30 v alu._2656_/X (sky130_fd_sc_hd__o32a_2)
+     1    0.00                           alu._0036_ (net)
+                  0.05    0.00    9.30 v alu._2658_/B1 (sky130_fd_sc_hd__o221a_2)
+                  0.04    0.24    9.55 v alu._2658_/X (sky130_fd_sc_hd__o221a_2)
+     1    0.00                           alu._0038_ (net)
+                  0.04    0.00    9.55 v alu._2659_/B_N (sky130_fd_sc_hd__or2b_2)
+                  0.03    0.15    9.70 ^ alu._2659_/X (sky130_fd_sc_hd__or2b_2)
+     1    0.00                           alu._0039_ (net)
+                  0.03    0.00    9.70 ^ alu._2660_/A (sky130_fd_sc_hd__buf_1)
+                  0.14    0.14    9.85 ^ alu._2660_/X (sky130_fd_sc_hd__buf_1)
+     3    0.01                           alu.alu_out[8] (net)
+                  0.18    0.00    9.85 ^ data_memory.process_for_mem[0].spad_inst/addr0[5] (sky130_sram_2rw_64x128_64)
+                                  9.85   data arrival time
+
+                  0.15   50.00   50.00   clock clk' (rise edge)
+                          0.00   50.00   clock network delay (ideal)
+                         -0.25   49.75   clock uncertainty
+                          0.00   49.75   clock reconvergence pessimism
+                                 49.75 ^ data_memory.process_for_mem[0].spad_inst/clk0 (sky130_sram_2rw_64x128_64)
+                         -0.10   49.65   library setup time
+                                 49.65   data required time
+-----------------------------------------------------------------------------
+                                 49.65   data required time
+                                 -9.85   data arrival time
+-----------------------------------------------------------------------------
+                                 39.80   slack (MET)
+
+
+
+===========================================================================
+report_checks --slack_max -0.01
+============================================================================
+
+======================= Typical Corner ===================================
+
+No paths found.

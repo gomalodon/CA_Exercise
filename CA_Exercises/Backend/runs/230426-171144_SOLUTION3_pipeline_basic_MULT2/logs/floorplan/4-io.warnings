@@ -1,0 +1,2 @@
+[WARNING PPL-0015] Macro data_memory.process_for_mem\[0\].spad_inst is not placed.
+[WARNING PPL-0015] Macro instruction_memory.process_for_mem\[0\].dram_inst is not placed.

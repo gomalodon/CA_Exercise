@@ -1,0 +1,3 @@
+[WARNING]: There are max slew violations in the design at the typical corner. Please refer to 'runs/230420-115713_SOLUTION1_simple_program_and_MULT1/reports/synthesis/2-syn_sta.slew.rpt'.
+[WARNING]: There are max fanout violations in the design at the typical corner. Please refer to 'runs/230420-115713_SOLUTION1_simple_program_and_MULT1/reports/synthesis/2-syn_sta.slew.rpt'.
+[WARNING]: There are max capacitance violations in the design at the typical corner. Please refer to 'runs/230420-115713_SOLUTION1_simple_program_and_MULT1/reports/synthesis/2-syn_sta.slew.rpt'.

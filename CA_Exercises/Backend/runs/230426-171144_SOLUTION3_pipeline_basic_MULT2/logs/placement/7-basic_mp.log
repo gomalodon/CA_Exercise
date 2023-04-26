@@ -1,0 +1,50 @@
+OpenROAD 850238c2fb11cf83a9d33c6d065a121aae8d837b 
+This program is licensed under the BSD-3 license. See the LICENSE file for details.
+Components of this program may be licensed under more restrictive licenses which must be honored.
+[INFO]: Reading ODB at '/users/students/r0790882/Documents/CA_Exercise/CA_Exercises/Backend/runs/230426-171144_SOLUTION3_pipeline_basic_MULT2/tmp/placement/5-global.odb'...
+define_corners Typical
+read_liberty -corner Typical /users/students/r0790882/Documents/CA_Exercise/CA_Exercises/Backend/conda-env/share/pdk/sky130A/libs.ref/sky130_fd_sc_hd/lib/sky130_fd_sc_hd__tt_025C_1v80.lib
+[INFO MPL-0005] Found 2 macros.
+[INFO MPL-0009] West pins 80.
+[INFO MPL-0009] East pins 82.
+[INFO MPL-0009] North pins 83.
+[INFO MPL-0009] South pins 82.
+[INFO MPL-0069] Initial weighted wire length 252046.
+Begin one level partition.
+[INFO MPL-0076] Partition 2 macros.
+[INFO MPL-0077] Using 2 cut lines.
+[INFO MPL-0079] Cut line 392.84.
+[INFO MPL-0079] Cut line 994.98.
+End one level partition.
+Begin horizontal partition.
+Begin east partition.
+[INFO MPL-0076] Partition 0 macros.
+[INFO MPL-0077] Using 0 cut lines.
+End east partition.
+Begin west partition.
+[INFO MPL-0076] Partition 2 macros.
+[INFO MPL-0077] Using 2 cut lines.
+[INFO MPL-0079] Cut line 323.68.
+[INFO MPL-0079] Cut line 1041.76.
+End west partition.
+End horizontal partition.
+Begin horizontal partition.
+Begin east partition.
+[INFO MPL-0076] Partition 2 macros.
+[INFO MPL-0077] Using 2 cut lines.
+[INFO MPL-0079] Cut line 323.68.
+[INFO MPL-0079] Cut line 1041.76.
+End east partition.
+Begin west partition.
+[INFO MPL-0076] Partition 0 macros.
+[INFO MPL-0077] Using 0 cut lines.
+End west partition.
+End horizontal partition.
+[INFO MPL-0070] Using 4 partition sets.
+[INFO MPL-0071] Solution 1 weighted wire length 223001.
+[INFO MPL-0071] Solution 2 weighted wire length 219702.
+[INFO MPL-0071] Solution 3 weighted wire length 218924.
+[INFO MPL-0071] Solution 4 weighted wire length 220899.
+[INFO MPL-0073] Best weighted wire length 223001.
+Writing OpenROAD database to /users/students/r0790882/Documents/CA_Exercise/CA_Exercises/Backend/runs/230426-171144_SOLUTION3_pipeline_basic_MULT2/tmp/placement/7-macros_placed.odb...
+Writing layout to /users/students/r0790882/Documents/CA_Exercise/CA_Exercises/Backend/runs/230426-171144_SOLUTION3_pipeline_basic_MULT2/tmp/placement/7-macros_placed.def...

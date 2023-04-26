@@ -1,0 +1,14 @@
+
+===========================================================================
+ report_clock_skew
+============================================================================
+
+======================= Typical Corner ===================================
+
+Clock clk
+Latency      CRPR       Skew
+instruction_memory.process_for_mem[0].dram_inst/clk0 v
+  12.46
+data_memory.process_for_mem[0].spad_inst/clk0 ^
+   6.65      0.00       5.80
+

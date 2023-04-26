@@ -1,0 +1,2 @@
+ERROR: Can't open input file `../Verilog/RTL_SOLUTION2_multiplication_support_MULT2/*.v' for reading: No such file or directory
+ERROR: TCL interpreter returned an error: Yosys command produced an error

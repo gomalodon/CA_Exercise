@@ -1,0 +1,346 @@
+
+59. Printing statistics.
+
+=== $paramod$6136cc844849bfbf02d165df8f5dca9405303543\reg_arstn_en ===
+
+   Number of wires:                  5
+   Number of wire bits:            131
+   Number of public wires:           5
+   Number of public wire bits:     131
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                 64
+     $_DFFE_PN0P_                   64
+
+=== $paramod\alu\DATA_W=s32'00000000000000000000000001000000 ===
+
+   Number of wires:              15474
+   Number of wire bits:          15666
+   Number of public wires:           6
+   Number of public wire bits:     198
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:              15534
+     $_ANDNOT_                    4790
+     $_AND_                       1982
+     $_MUX_                        643
+     $_NAND_                       782
+     $_NOR_                        365
+     $_NOT_                        227
+     $_ORNOT_                      251
+     $_OR_                        2133
+     $_XNOR_                       990
+     $_XOR_                       3371
+
+=== $paramod\branch_unit\DATA_W=s32'00000000000000000000000001000000 ===
+
+   Number of wires:                532
+   Number of wire bits:            784
+   Number of public wires:           4
+   Number of public wire bits:     256
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                592
+     $_ANDNOT_                     117
+     $_NAND_                         2
+     $_NOR_                        134
+     $_ORNOT_                       13
+     $_OR_                         137
+     $_XNOR_                        69
+     $_XOR_                        120
+
+=== $paramod\mux_2\DATA_W=s32'00000000000000000000000001000000 ===
+
+   Number of wires:                  4
+   Number of wire bits:            193
+   Number of public wires:           4
+   Number of public wire bits:     193
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                 64
+     $_MUX_                         64
+
+=== $paramod\pc\DATA_W=s32'00000000000000000000000001000000 ===
+
+   Number of wires:                124
+   Number of wire bits:            502
+   Number of public wires:          13
+   Number of public wire bits:     391
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                177
+     $_ANDNOT_                      27
+     $_AND_                          4
+     $_NAND_                        30
+     $_NOR_                          3
+     $_NOT_                          1
+     $_ORNOT_                        2
+     $_OR_                          46
+     $_XNOR_                        27
+     $_XOR_                         34
+     $paramod$6136cc844849bfbf02d165df8f5dca9405303543\reg_arstn_en      1
+     $paramod\mux_2\DATA_W=s32'00000000000000000000000001000000      2
+
+=== $paramod\reg_arstn_en\DATA_W=s32'00000000000000000000000000000001 ===
+
+   Number of wires:                  5
+   Number of wire bits:              5
+   Number of public wires:           5
+   Number of public wire bits:       5
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                  1
+     $_DFFE_PN0P_                    1
+
+=== $paramod\reg_arstn_en\DATA_W=s32'00000000000000000000000000000010 ===
+
+   Number of wires:                  5
+   Number of wire bits:              7
+   Number of public wires:           5
+   Number of public wire bits:       7
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                  2
+     $_DFFE_PN0P_                    2
+
+=== $paramod\reg_arstn_en\DATA_W=s32'00000000000000000000000000000011 ===
+
+   Number of wires:                  5
+   Number of wire bits:              9
+   Number of public wires:           5
+   Number of public wire bits:       9
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                  3
+     $_DFFE_PN0P_                    3
+
+=== $paramod\reg_arstn_en\DATA_W=s32'00000000000000000000000000000101 ===
+
+   Number of wires:                  5
+   Number of wire bits:             13
+   Number of public wires:           5
+   Number of public wire bits:      13
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                  5
+     $_DFFE_PN0P_                    5
+
+=== $paramod\reg_arstn_en\DATA_W=s32'00000000000000000000000000000111 ===
+
+   Number of wires:                  5
+   Number of wire bits:             17
+   Number of public wires:           5
+   Number of public wire bits:      17
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                  7
+     $_DFFE_PN0P_                    7
+
+=== $paramod\reg_arstn_en\DATA_W=s32'00000000000000000000000000100000 ===
+
+   Number of wires:                  5
+   Number of wire bits:             67
+   Number of public wires:           5
+   Number of public wire bits:      67
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                 32
+     $_DFFE_PN0P_                   32
+
+=== $paramod\reg_arstn_en\DATA_W=s32'00000000000000000000000001000000 ===
+
+   Number of wires:                  5
+   Number of wire bits:            131
+   Number of public wires:           5
+   Number of public wire bits:     131
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                 64
+     $_DFFE_PN0P_                   64
+
+=== $paramod\register_file\DATA_W=s32'00000000000000000000000001000000 ===
+
+   Number of wires:               8170
+   Number of wire bits:          10324
+   Number of public wires:          40
+   Number of public wire bits:    2194
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:              10242
+     $_ANDNOT_                    4629
+     $_AND_                          2
+     $_DFFE_PN0P_                 1984
+     $_NAND_                        36
+     $_NOT_                         66
+     $_ORNOT_                       14
+     $_OR_                        3511
+
+=== $paramod\sram_BW32\ADDR_W=s32'00000000000000000000000000001001 ===
+
+   Number of wires:                 16
+   Number of wire bits:            266
+   Number of public wires:          15
+   Number of public wire bits:     265
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                  6
+     $_NOT_                          1
+     $_ORNOT_                        2
+     $_XNOR_                         2
+     sky130_sram_2rw_32x128_32       1
+
+=== $paramod\sram_BW64\ADDR_W=s32'00000000000000000000000000001010 ===
+
+   Number of wires:                 16
+   Number of wire bits:            394
+   Number of public wires:          15
+   Number of public wire bits:     393
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                  6
+     $_NOT_                          1
+     $_ORNOT_                        2
+     $_XNOR_                         2
+     sky130_sram_2rw_64x128_64       1
+
+=== alu_control ===
+
+   Number of wires:                 59
+   Number of wire bits:             71
+   Number of public wires:           4
+   Number of public wire bits:      16
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                 59
+     $_ANDNOT_                      16
+     $_MUX_                          1
+     $_NAND_                         1
+     $_NOR_                          6
+     $_NOT_                          2
+     $_ORNOT_                       10
+     $_OR_                          23
+
+=== control_unit ===
+
+   Number of wires:                 28
+   Number of wire bits:             35
+   Number of public wires:          10
+   Number of public wire bits:      17
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                 26
+     $_ANDNOT_                       8
+     $_AND_                          1
+     $_NAND_                         3
+     $_NOR_                          2
+     $_ORNOT_                        3
+     $_OR_                           9
+
+=== cpu ===
+
+   Number of wires:                 70
+   Number of wire bits:           1857
+   Number of public wires:          70
+   Number of public wire bits:    1857
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                 45
+     $paramod\alu\DATA_W=s32'00000000000000000000000001000000      1
+     $paramod\branch_unit\DATA_W=s32'00000000000000000000000001000000      1
+     $paramod\mux_2\DATA_W=s32'00000000000000000000000001000000      2
+     $paramod\pc\DATA_W=s32'00000000000000000000000001000000      1
+     $paramod\reg_arstn_en\DATA_W=s32'00000000000000000000000000000001     16
+     $paramod\reg_arstn_en\DATA_W=s32'00000000000000000000000000000010      1
+     $paramod\reg_arstn_en\DATA_W=s32'00000000000000000000000000000011      1
+     $paramod\reg_arstn_en\DATA_W=s32'00000000000000000000000000000101      3
+     $paramod\reg_arstn_en\DATA_W=s32'00000000000000000000000000000111      1
+     $paramod\reg_arstn_en\DATA_W=s32'00000000000000000000000000100000      1
+     $paramod\reg_arstn_en\DATA_W=s32'00000000000000000000000001000000     11
+     $paramod\register_file\DATA_W=s32'00000000000000000000000001000000      1
+     $paramod\sram_BW32\ADDR_W=s32'00000000000000000000000000001001      1
+     $paramod\sram_BW64\ADDR_W=s32'00000000000000000000000000001010      1
+     alu_control                     1
+     control_unit                    1
+     immediate_extend_unit           1
+
+=== immediate_extend_unit ===
+
+   Number of wires:                 66
+   Number of wire bits:            160
+   Number of public wires:           2
+   Number of public wire bits:      96
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:                 78
+     $_ANDNOT_                      29
+     $_AND_                          2
+     $_MUX_                         13
+     $_NAND_                         2
+     $_NOT_                          1
+     $_ORNOT_                        2
+     $_OR_                          29
+
+=== design hierarchy ===
+
+   cpu                               1
+     $paramod\alu\DATA_W=s32'00000000000000000000000001000000      1
+     $paramod\branch_unit\DATA_W=s32'00000000000000000000000001000000      1
+     $paramod\mux_2\DATA_W=s32'00000000000000000000000001000000      2
+     $paramod\pc\DATA_W=s32'00000000000000000000000001000000      1
+       $paramod$6136cc844849bfbf02d165df8f5dca9405303543\reg_arstn_en      1
+       $paramod\mux_2\DATA_W=s32'00000000000000000000000001000000      2
+     $paramod\reg_arstn_en\DATA_W=s32'00000000000000000000000000000001     16
+     $paramod\reg_arstn_en\DATA_W=s32'00000000000000000000000000000010      1
+     $paramod\reg_arstn_en\DATA_W=s32'00000000000000000000000000000011      1
+     $paramod\reg_arstn_en\DATA_W=s32'00000000000000000000000000000101      3
+     $paramod\reg_arstn_en\DATA_W=s32'00000000000000000000000000000111      1
+     $paramod\reg_arstn_en\DATA_W=s32'00000000000000000000000000100000      1
+     $paramod\reg_arstn_en\DATA_W=s32'00000000000000000000000001000000     11
+     $paramod\register_file\DATA_W=s32'00000000000000000000000001000000      1
+     $paramod\sram_BW32\ADDR_W=s32'00000000000000000000000000001001      1
+     $paramod\sram_BW64\ADDR_W=s32'00000000000000000000000000001010      1
+     alu_control                     1
+     control_unit                    1
+     immediate_extend_unit           1
+
+   Number of wires:              24746
+   Number of wire bits:          32622
+   Number of public wires:         370
+   Number of public wire bits:    8246
+   Number of memories:               0
+   Number of memory bits:            0
+   Number of processes:              0
+   Number of cells:              27816
+     $_ANDNOT_                    9616
+     $_AND_                       1991
+     $_DFFE_PN0P_                 2827
+     $_MUX_                        913
+     $_NAND_                       856
+     $_NOR_                        510
+     $_NOT_                        299
+     $_ORNOT_                      299
+     $_OR_                        5888
+     $_XNOR_                      1090
+     $_XOR_                       3525
+     sky130_sram_2rw_32x128_32       1
+     sky130_sram_2rw_64x128_64       1
+
