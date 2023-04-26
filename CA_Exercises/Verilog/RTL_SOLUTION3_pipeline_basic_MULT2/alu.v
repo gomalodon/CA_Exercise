@@ -11,14 +11,14 @@
 
 
 module alu #(
-   parameter integer DATA_W = 16
+      parameter integer DATA_W = 16
    )(
-	input   wire signed [DATA_W-1:0] alu_in_0,
-      	input   wire signed [DATA_W-1:0] alu_in_1,
-      	input   wire        [       3:0] alu_ctrl,
-	output  reg  signed [DATA_W-1:0] alu_out,
-	output  reg		         zero_flag,
-      	output  reg                      overflow
+      input   wire signed [DATA_W-1:0] alu_in_0,
+      input   wire signed [DATA_W-1:0] alu_in_1,
+      input   wire        [       3:0] alu_ctrl,
+      output  reg  signed [DATA_W-1:0] alu_out,
+      output  reg		         zero_flag,
+      output  reg                      overflow
    );
 
    //The alu control codes can be found

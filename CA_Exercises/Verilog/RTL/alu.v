@@ -11,13 +11,13 @@
 
 
 module alu #(
-   parameter integer DATA_W = 16
+      parameter integer DATA_W = 16
    )(
-		input   wire signed [DATA_W-1:0] alu_in_0,
+      input   wire signed [DATA_W-1:0] alu_in_0,
       input   wire signed [DATA_W-1:0] alu_in_1,
       input   wire        [       3:0] alu_ctrl,
-		output  reg  signed [DATA_W-1:0] alu_out,
-		output  reg		                  zero_flag,
+      output  reg  signed [DATA_W-1:0] alu_out,
+      output  reg		         zero_flag,
       output  reg                      overflow
    );
 
@@ -32,13 +32,14 @@ module alu #(
    parameter [3:0] SRL_OP = 4'd4;
    parameter [3:0] SUB_OP = 4'd6;
    parameter [3:0] SLT_OP = 4'd7;
-
+   parameter [3:0] MUL_OP = 4'd8;
 
    //REG AND WIRE DECLARATION
    reg signed [DATA_W-1:0] sub_out,add_out,and_out,or_out,
                            nor_out,slt_out, sll_out, srl_out;
-	reg 		               overflow_add,overflow_sub,
+   reg 		           overflow_add,overflow_sub,
                            msb_equal_flag;
+   reg signed [2*DATA_W-1:0] mul_out;
    
    
    
@@ -66,6 +67,7 @@ module alu #(
       and_out  =   alu_in_0 & alu_in_1;
       or_out   =   alu_in_0 | alu_in_1;
       slt_out  =  (alu_in_0 < alu_in_1) ? 1:0;        //Zero extend the 1 bit slt flag to a DATA_W bit value     
+      mul_out  =  alu_in_0 * alu_in_1;
    end
 
    //This block will translate into a multiplexer, where alu_ctrl
@@ -80,6 +82,7 @@ module alu #(
 			SLT_OP:  alu_out = slt_out;
 			SLL_OP:  alu_out = sll_out;
 			SRL_OP:  alu_out = srl_out;
+			MUL_OP:  alu_out = mul_out;			
 			default: alu_out =     'd0;
 		endcase
 	end
