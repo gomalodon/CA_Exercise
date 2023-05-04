@@ -41,22 +41,25 @@ module cpu(
 wire              zero_flag;
 wire [      63:0] branch_pc,updated_pc,current_pc,jump_pc, pc_IF_ID, pc_ID_EX;
 wire [      31:0] instruction, instruction_IF_ID;
-wire [       1:0] alu_op, alu_op_ID_EX, forwardA, forwardB;
+wire [       1:0] alu_op, alu_op_haz_out, alu_op_ID_EX, forwardA, forwardB;
 wire [       3:0] alu_control;
 wire              reg_dst,branch,mem_read,mem_2_reg,
                   mem_write,alu_src, reg_write, jump;
 wire [       4:0] regfile_waddr, dest_addr_ID_EX, dest_addr_EX_MEM,dest_addr_MEM_WB, rs1_ID_EX, rs2_ID_EX;
 wire [      63:0] regfile_wdata,mem_data,alu_out, alu_res_EX_MEM,alu_res_MEM_WB,
                   regfile_rdata_1,regfile_rdata_2,rdata2_EX_MEM,mem_data_MEM_WB,
-                  alu_operand_2, rdata1_ID_EX, rdata2_ID_EX, branch_pc_EX_MEM, jump_pc_EX_MEM,
-                  ford_A_MUX, ford_B_MUX;
+                  alu_operand_2, rdata1_ID_EX, rdata2_ID_EX, branch_pc_EX_MEM,
+                  jump_pc_EX_MEM, ford_A_MUX, ford_B_MUX;
 wire signed [63:0] immediate_extended, immediate_ID_EX;
 wire [2:0] func3_ID_EX;
 wire [6:0] func7_ID_EX;
 wire reg_write_ID_EX,alu_src_ID_EX, mem_read_ID_EX, mem_write_ID_EX, 
 mem_2_reg_ID_EX, branch_ID_EX, jump_ID_EX,zero_flag_EX_MEM,mem_write_EX_MEM,
 mem_read_EX_MEM,jump_EX_MEM, branch_EX_MEM,reg_write_EX_MEM,reg_write_MEM_WB,
-mem_2_reg_MEM_WB;
+mem_2_reg_MEM_WB, pc_write, IF_ID_write, flush_ctrl, jump_haz_out, 
+branch_haz_out, alu_src_haz_out, reg_dst_haz_out, mem_read_haz_out,
+mem_2_reg_haz_out, mem_write_haz_out, reg_write_haz_out;
+reg branch_flag;
 
 forwarding_unit ford_unit(
    .rs1(rs1_ID_EX),
@@ -70,19 +73,29 @@ forwarding_unit ford_unit(
    .forwardB(forwardB)
 );
 
+hazard_unit haz_unit(
+   .rs1(instruction[19:15]),
+   .rs2(instruction[24:20]),
+   .rd_EX_MEM(dest_addr_EX_MEM),
+   .mem_read_ID_EX(),
+   .pc_write(pc_write),
+   .IF_ID_write(IF_ID_write),
+   .flush_ctrl(flush_ctrl)
+);
+
 // fetch
 pc #(
    .DATA_W(64)
 ) program_counter (
    .clk       (clk       ),
    .arst_n    (arst_n    ),
-   .branch_pc (branch_pc_EX_MEM ),
-   .jump_pc   (jump_pc_EX_MEM   ),
-   .zero_flag (zero_flag_EX_MEM ),
+   .branch_pc (branch_pc ),
+   .jump_pc   (jump_pc   ),
+   .zero_flag (branch_flag ),
    .branch    (branch_EX_MEM    ),
    .jump      (jump_EX_MEM      ),
    .current_pc(current_pc),
-   .enable    (enable    ),
+   .enable    (enable && pc_write  ),
    .updated_pc(updated_pc)
 );
 
@@ -108,7 +121,7 @@ reg_arstn_en #(
 ) IF_ID_instruction(
    .clk(clk),
    .arst_n(arst_n),
-   .en(1'b1),
+   .en(enable),
    .din(instruction),
    .dout(instruction_IF_ID)
 );
@@ -118,7 +131,7 @@ reg_arstn_en #(
 ) IF_ID_pc(
    .clk(clk),
    .arst_n(arst_n),
-   .en(1'b1),
+   .en(enable),
    .din(current_pc),
    .dout(pc_IF_ID)
 );
@@ -132,6 +145,7 @@ immediate_extend_unit immediate_extend_u(
 // decode
 control_unit control_unit(
    .opcode   (instruction_IF_ID[6:0]),
+   .branch_flag(branch_flag),
    .alu_op   (alu_op          ),
    .reg_dst  (reg_dst         ),
    .branch   (branch          ),
@@ -141,6 +155,87 @@ control_unit control_unit(
    .alu_src  (alu_src         ),
    .reg_write(reg_write       ),
    .jump     (jump            )
+);
+
+mux_2 #(
+   .DATA_W(2)
+) control_aluop_mux (
+   .input_a (2'b00),
+   .input_b (alu_op),
+   .select_a(flush_ctrl),
+   .mux_out (alu_op_haz_out)
+);
+
+mux_2 #(
+   .DATA_W(1)
+) control_regdst_mux (
+   .input_a (1'b0),
+   .input_b (reg_dst),
+   .select_a(flush_ctrl),
+   .mux_out (reg_dst_haz_out)
+);
+
+mux_2 #(
+   .DATA_W(1)
+) control_branch_mux (
+   .input_a (1'b0),
+   .input_b (branch),
+   .select_a(flush_ctrl),
+   .mux_out (branch_haz_out)
+);
+
+mux_2 #(
+   .DATA_W(1)
+) control_memread_mux (
+   .input_a (1'b0),
+   .input_b (mem_read),
+   .select_a(flush_ctrl),
+   .mux_out (mem_read_haz_out)
+);
+
+mux_2 #(
+   .DATA_W(1)
+) control_mem2reg_mux (
+   .input_a (1'b0),
+   .input_b (mem_2_reg),
+   .select_a(flush_ctrl),
+   .mux_out (mem_2_reg_haz_out)
+);
+
+mux_2 #(
+   .DATA_W(1)
+) control_memwrite_mux (
+   .input_a (1'b0),
+   .input_b (mem_write),
+   .select_a(flush_ctrl),
+   .mux_out (mem_write_haz_out)
+);
+
+mux_2 #(
+   .DATA_W(1)
+) control_alusrc_mux (
+   .input_a (1'b0),
+   .input_b (alu_src),
+   .select_a(flush_ctrl),
+   .mux_out (alu_src_haz_out)
+);
+
+mux_2 #(
+   .DATA_W(1)
+) control_regwrite_mux (
+   .input_a (1'b0),
+   .input_b (reg_write),
+   .select_a(flush_ctrl),
+   .mux_out (reg_write_haz_out)
+);
+
+mux_2 #(
+   .DATA_W(1)
+) control_jmp_mux (
+   .input_a (1'b0),
+   .input_b (jump),
+   .select_a(flush_ctrl),
+   .mux_out (jump_haz_out)
 );
 
 // decode
@@ -164,7 +259,7 @@ reg_arstn_en #(
 ) ID_EX_pc(
    .clk(clk),
    .arst_n(arst_n),
-   .en(1'b1),
+   .en(enable && IF_ID_write),
    .din(pc_IF_ID),
    .dout(pc_ID_EX)
 );
@@ -174,7 +269,7 @@ reg_arstn_en #(
 ) ID_EX_rdata1(
    .clk(clk),
    .arst_n(arst_n),
-   .en(1'b1),
+   .en(enable && IF_ID_write),
    .din(regfile_rdata_1),
    .dout(rdata1_ID_EX)
 );
@@ -184,7 +279,7 @@ reg_arstn_en #(
 ) ID_EX_rdata2(
    .clk(clk),
    .arst_n(arst_n),
-   .en(1'b1),
+   .en(enable && IF_ID_write),
    .din(regfile_rdata_2),
    .dout(rdata2_ID_EX)
 );
@@ -194,7 +289,7 @@ reg_arstn_en #(
 ) ID_EX_immediate(
    .clk(clk),
    .arst_n(arst_n),
-   .en(1'b1),
+   .en(enable && IF_ID_write),
    .din(immediate_extended),
    .dout(immediate_ID_EX)
 );
@@ -204,7 +299,7 @@ reg_arstn_en #(
 ) ID_EX_func7(
    .clk(clk),
    .arst_n(arst_n),
-   .en(1'b1),
+   .en(enable && IF_ID_write),
    .din(instruction_IF_ID[31:25]),
    .dout(func7_ID_EX)
 );
@@ -214,7 +309,7 @@ reg_arstn_en #(
 ) ID_EX_func3(
    .clk(clk),
    .arst_n(arst_n),
-   .en(1'b1),
+   .en(enable && IF_ID_write),
    .din(instruction_IF_ID[14:12]),
    .dout(func3_ID_EX)
 );
@@ -224,7 +319,7 @@ reg_arstn_en #(
 ) ID_EX_rs1(
    .clk(clk),
    .arst_n(arst_n),
-   .en(1'b1),
+   .en(enable && IF_ID_write),
    .din(instruction_IF_ID[19:15]),
    .dout(rs1_ID_EX)
 );
@@ -234,7 +329,7 @@ reg_arstn_en #(
 ) ID_EX_rs2(
    .clk(clk),
    .arst_n(arst_n),
-   .en(1'b1),
+   .en(enable && IF_ID_write),
    .din(instruction_IF_ID[24:20]),
    .dout(rs2_ID_EX)
 );
@@ -244,7 +339,7 @@ reg_arstn_en #(
 ) ID_EX_dest_addr(
    .clk(clk),
    .arst_n(arst_n),
-   .en(1'b1),
+   .en(enable && IF_ID_write),
    .din(instruction_IF_ID[11:7]),
    .dout(dest_addr_ID_EX)
 );
@@ -255,7 +350,7 @@ reg_arstn_en #(
 ) ID_EX_alu_src(
    .clk(clk),
    .arst_n(arst_n),
-   .en(1'b1),
+   .en(enable && IF_ID_write),
    .din(alu_src),
    .dout(alu_src_ID_EX)
 );
@@ -265,7 +360,7 @@ reg_arstn_en #(
 ) ID_EX_alu_op(
    .clk(clk),
    .arst_n(arst_n),
-   .en(1'b1),
+   .en(enable && IF_ID_write),
    .din(alu_op),
    .dout(alu_op_ID_EX)
 );
@@ -275,7 +370,7 @@ reg_arstn_en #(
 ) ID_EX_mem_write(
    .clk(clk),
    .arst_n(arst_n),
-   .en(1'b1),
+   .en(enable && IF_ID_write),
    .din(mem_write),
    .dout(mem_write_ID_EX)
 );
@@ -285,7 +380,7 @@ reg_arstn_en #(
 ) ID_EX_mem_read(
    .clk(clk),
    .arst_n(arst_n),
-   .en(1'b1),
+   .en(enable && IF_ID_write),
    .din(mem_read),
    .dout(mem_read_ID_EX)
 );
@@ -295,7 +390,7 @@ reg_arstn_en #(
 ) ID_EX_jump(
    .clk(clk),
    .arst_n(arst_n),
-   .en(1'b1),
+   .en(enable && IF_ID_write),
    .din(jump),
    .dout(jump_ID_EX)
 );
@@ -304,7 +399,7 @@ reg_arstn_en #(
 ) ID_EX_branch(
    .clk(clk),
    .arst_n(arst_n),
-   .en(1'b1),
+   .en(enable && IF_ID_write),
    .din(branch),
    .dout(branch_ID_EX)
 );
@@ -314,7 +409,7 @@ reg_arstn_en #(
 ) ID_EX_reg_write(
    .clk(clk),
    .arst_n(arst_n),
-   .en(1'b1),
+   .en(enable && IF_ID_write),
    .din(reg_write),
    .dout(reg_write_ID_EX)
 );
@@ -324,7 +419,7 @@ reg_arstn_en #(
 ) ID_EX_mem_2_reg(
    .clk(clk),
    .arst_n(arst_n),
-   .en(1'b1),
+   .en(enable && IF_ID_write),
    .din(mem_2_reg),
    .dout(mem_2_reg_ID_EX)
 );
@@ -383,42 +478,42 @@ alu#(
    .overflow (                )
 );
 
-// execute
+// decode
 branch_unit#(
    .DATA_W(64)
 )branch_unit(
-   .updated_pc         (pc_ID_EX        ),
-   .immediate_extended (immediate_ID_EX),
+   .updated_pc         (pc_IF_ID        ),
+   .immediate_extended (immediate_extended),
    .branch_pc          (branch_pc         ),
    .jump_pc            (jump_pc           )
 );
 
-reg_arstn_en #(
-   .DATA_W(64)
-) EX_MEM_branch_pc(
-   .clk(clk),
-   .arst_n(arst_n),
-   .en(1'b1),
-   .din(branch_pc),
-   .dout(branch_pc_EX_MEM)
-);
+// reg_arstn_en #(
+//    .DATA_W(64)
+// ) EX_MEM_branch_pc(
+//    .clk(clk),
+//    .arst_n(arst_n),
+//    .en(enable),
+//    .din(branch_pc),
+//    .dout(branch_pc_EX_MEM)
+// );
 
-reg_arstn_en #(
-   .DATA_W(64)
-) EX_MEM_jump_pc(
-   .clk(clk),
-   .arst_n(arst_n),
-   .en(1'b1),
-   .din(jump_pc),
-   .dout(jump_pc_EX_MEM)
-);
+// reg_arstn_en #(
+//    .DATA_W(64)
+// ) EX_MEM_jump_pc(
+//    .clk(clk),
+//    .arst_n(arst_n),
+//    .en(enable),
+//    .din(jump_pc),
+//    .dout(jump_pc_EX_MEM)
+// );
 
 reg_arstn_en #(
    .DATA_W(64)
 ) EX_MEM_alu_res(
    .clk(clk),
    .arst_n(arst_n),
-   .en(1'b1),
+   .en(enable),
    .din(alu_out),
    .dout(alu_res_EX_MEM)
 );
@@ -428,7 +523,7 @@ reg_arstn_en #(
 ) EX_MEM_rdata2(
    .clk(clk),
    .arst_n(arst_n),
-   .en(1'b1),
+   .en(enable),
    .din(rdata2_ID_EX),
    .dout(rdata2_EX_MEM)
 );
@@ -438,7 +533,7 @@ reg_arstn_en #(
 ) EX_MEM_dest_addr(
    .clk(clk),
    .arst_n(arst_n),
-   .en(1'b1),
+   .en(enable),
    .din(dest_addr_ID_EX),
    .dout(dest_addr_EX_MEM)
 );
@@ -449,7 +544,7 @@ reg_arstn_en #(
 ) EX_MEM_mem_write(
    .clk(clk),
    .arst_n(arst_n),
-   .en(1'b1),
+   .en(enable),
    .din(mem_write_ID_EX),
    .dout(mem_write_EX_MEM)
 );
@@ -459,7 +554,7 @@ reg_arstn_en #(
 ) EX_MEM_mem_read(
    .clk(clk),
    .arst_n(arst_n),
-   .en(1'b1),
+   .en(enable),
    .din(mem_read_ID_EX),
    .dout(mem_read_EX_MEM)
 );
@@ -469,7 +564,7 @@ reg_arstn_en #(
 ) EX_MEM_jump(
    .clk(clk),
    .arst_n(arst_n),
-   .en(1'b1),
+   .en(enable),
    .din(jump_ID_EX),
    .dout(jump_EX_MEM)
 );
@@ -479,7 +574,7 @@ reg_arstn_en #(
 ) EX_MEM_branch(
    .clk(clk),
    .arst_n(arst_n),
-   .en(1'b1),
+   .en(enable),
    .din(branch_ID_EX),
    .dout(branch_EX_MEM)
 );
@@ -489,7 +584,7 @@ reg_arstn_en #(
 ) EX_MEM_reg_write(
    .clk(clk),
    .arst_n(arst_n),
-   .en(1'b1),
+   .en(enable),
    .din(reg_write_ID_EX),
    .dout(reg_write_EX_MEM)
 );
@@ -499,19 +594,9 @@ reg_arstn_en #(
 ) EX_MEM_mem_2_reg(
    .clk(clk),
    .arst_n(arst_n),
-   .en(1'b1),
+   .en(enable),
    .din(mem_2_reg_ID_EX),
    .dout(mem_2_reg_EX_MEM)
-);
-
-reg_arstn_en #(
-   .DATA_W(1)
-) EX_MEM_zero(
-   .clk(clk),
-   .arst_n(arst_n),
-   .en(1'b1),
-   .din(zero_flag),
-   .dout(zero_flag_EX_MEM)
 );
 
 // memory
@@ -536,7 +621,7 @@ reg_arstn_en #(
 ) MEM_WB_mem_data(
    .clk(clk),
    .arst_n(arst_n),
-   .en(1'b1),
+   .en(enable),
    .din(mem_data),
    .dout(mem_data_MEM_WB)
 );
@@ -546,7 +631,7 @@ reg_arstn_en #(
 ) MEM_WB_alu_res(
    .clk(clk),
    .arst_n(arst_n),
-   .en(1'b1),
+   .en(enable),
    .din(alu_res_EX_MEM),
    .dout(alu_res_MEM_WB)
 );
@@ -556,7 +641,7 @@ reg_arstn_en #(
 ) MEM_WB_dest_addr(
    .clk(clk),
    .arst_n(arst_n),
-   .en(1'b1),
+   .en(enable),
    .din(dest_addr_EX_MEM),
    .dout(dest_addr_MEM_WB)
 );
@@ -567,7 +652,7 @@ reg_arstn_en #(
 ) MEM_WB_reg_write(
    .clk(clk),
    .arst_n(arst_n),
-   .en(1'b1),
+   .en(enable),
    .din(reg_write_EX_MEM),
    .dout(reg_write_MEM_WB)
 );
@@ -577,7 +662,7 @@ reg_arstn_en #(
 ) MEM_WB_mem_2_reg(
    .clk(clk),
    .arst_n(arst_n),
-   .en(1'b1),
+   .en(enable),
    .din(mem_2_reg_EX_MEM),
    .dout(mem_2_reg_MEM_WB)
 );
@@ -591,6 +676,16 @@ mux_2 #(
    .select_a (mem_2_reg_MEM_WB    ),
    .mux_out  (regfile_wdata)
 );
+
+
+//decode
+always @(*) begin
+   if (regfile_rdata_1 == regfile_rdata_2) 
+      branch_flag = 1'b1;
+   else
+      branch_flag = 1'b0;
+
+end
 
 endmodule
 

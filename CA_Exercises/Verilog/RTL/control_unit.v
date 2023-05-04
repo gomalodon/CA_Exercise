@@ -3,6 +3,7 @@
 
 module control_unit(
       input  wire [6:0] opcode,
+      input  wire branch_flag,
       output reg  [1:0] alu_op,
       output reg        reg_dst,
       output reg        branch,
@@ -62,7 +63,7 @@ module control_unit(
             reg_write = 1'b0;
             mem_read  = 1'b0;
             mem_write = 1'b0;
-            branch    = 1'b1;
+            branch    = branch_flag ? 1'b1 : 1'b0;
             alu_op    = SUB_OPCODE;
             jump      = 1'b0;
          end
