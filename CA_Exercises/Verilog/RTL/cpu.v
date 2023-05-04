@@ -41,14 +41,15 @@ module cpu(
 wire              zero_flag;
 wire [      63:0] branch_pc,updated_pc,current_pc,jump_pc, pc_IF_ID, pc_ID_EX;
 wire [      31:0] instruction, instruction_IF_ID;
-wire [       1:0] alu_op, alu_op_ID_EX;
+wire [       1:0] alu_op, alu_op_ID_EX, forwardA, forwardB;
 wire [       3:0] alu_control;
 wire              reg_dst,branch,mem_read,mem_2_reg,
                   mem_write,alu_src, reg_write, jump;
-wire [       4:0] regfile_waddr, dest_addr_ID_EX, dest_addr_EX_MEM,dest_addr_MEM_WB;
+wire [       4:0] regfile_waddr, dest_addr_ID_EX, dest_addr_EX_MEM,dest_addr_MEM_WB, rs1_ID_EX, rs2_ID_EX;
 wire [      63:0] regfile_wdata,mem_data,alu_out, alu_res_EX_MEM,alu_res_MEM_WB,
                   regfile_rdata_1,regfile_rdata_2,rdata2_EX_MEM,mem_data_MEM_WB,
-                  alu_operand_2, rdata1_ID_EX, rdata2_ID_EX, branch_pc_EX_MEM, jump_pc_EX_MEM;
+                  alu_operand_2, rdata1_ID_EX, rdata2_ID_EX, branch_pc_EX_MEM, jump_pc_EX_MEM,
+                  ford_A_MUX, ford_B_MUX;
 wire signed [63:0] immediate_extended, immediate_ID_EX;
 wire [2:0] func3_ID_EX;
 wire [6:0] func7_ID_EX;
@@ -56,6 +57,18 @@ wire reg_write_ID_EX,alu_src_ID_EX, mem_read_ID_EX, mem_write_ID_EX,
 mem_2_reg_ID_EX, branch_ID_EX, jump_ID_EX,zero_flag_EX_MEM,mem_write_EX_MEM,
 mem_read_EX_MEM,jump_EX_MEM, branch_EX_MEM,reg_write_EX_MEM,reg_write_MEM_WB,
 mem_2_reg_MEM_WB;
+
+forwarding_unit ford_unit(
+   .rs1(rs1_ID_EX),
+   .rs2(rs2_ID_EX),
+   .rd_ID_EX(dest_addr_ID_EX),
+   .rd_EX_MEM(dest_addr_EX_MEM),
+   .rd_MEM_WB(dest_addr_MEM_WB),
+   .reg_write_EX_MEM(reg_write_EX_MEM),
+   .reg_write_MEM_WB(reg_write_MEM_WB),
+   .forwardA(forwardA),
+   .forwardB(forwardB)
+);
 
 // fetch
 pc #(
@@ -208,6 +221,26 @@ reg_arstn_en #(
 
 reg_arstn_en #(
    .DATA_W(5)
+) ID_EX_rs1(
+   .clk(clk),
+   .arst_n(arst_n),
+   .en(1'b1),
+   .din(instruction_IF_ID[19:15]),
+   .dout(rs1_ID_EX)
+);
+
+reg_arstn_en #(
+   .DATA_W(5)
+) ID_EX_rs2(
+   .clk(clk),
+   .arst_n(arst_n),
+   .en(1'b1),
+   .din(instruction_IF_ID[24:20]),
+   .dout(rs2_ID_EX)
+);
+
+reg_arstn_en #(
+   .DATA_W(5)
 ) ID_EX_dest_addr(
    .clk(clk),
    .arst_n(arst_n),
@@ -297,6 +330,30 @@ reg_arstn_en #(
 );
 
 // execute
+mux_4 #(
+   .DATA_W(64)
+) mux_forwardB (
+   .input_a (rdata2_ID_EX),
+   .input_b (regfile_wdata    ),
+   .input_c (alu_res_EX_MEM    ),
+   .input_d (64'b0    ),
+   .select_a(forwardB           ),
+   .mux_out (ford_B_MUX     )
+);
+
+// execute
+mux_4 #(
+   .DATA_W(64)
+) mux_forwardA (
+   .input_a (rdata1_ID_EX),
+   .input_b (regfile_wdata    ),
+   .input_c (alu_res_EX_MEM    ),
+   .input_d (64'b0    ),
+   .select_a(forwardA           ),
+   .mux_out (ford_A_MUX     )
+);
+
+// execute
 alu_control alu_ctrl(
    .func7          (func7_ID_EX),
    .func3          (func3_ID_EX),
@@ -309,7 +366,7 @@ mux_2 #(
    .DATA_W(64)
 ) alu_operand_mux (
    .input_a (immediate_ID_EX),
-   .input_b (rdata2_ID_EX    ),
+   .input_b (ford_B_MUX    ),
    .select_a(alu_src_ID_EX           ),
    .mux_out (alu_operand_2     )
 );
@@ -318,7 +375,7 @@ mux_2 #(
 alu#(
    .DATA_W(64)
 ) alu(
-   .alu_in_0 (rdata1_ID_EX ),
+   .alu_in_0 (ford_A_MUX ),
    .alu_in_1 (alu_operand_2   ),
    .alu_ctrl (alu_control     ),
    .alu_out  (alu_out         ),
