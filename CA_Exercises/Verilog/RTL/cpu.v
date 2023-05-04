@@ -77,7 +77,7 @@ hazard_unit haz_unit(
    .rs1(instruction[19:15]),
    .rs2(instruction[24:20]),
    .rd_EX_MEM(dest_addr_EX_MEM),
-   .mem_read_ID_EX(),
+   .mem_read_ID_EX(mem_read_ID_EX),
    .pc_write(pc_write),
    .IF_ID_write(IF_ID_write),
    .flush_ctrl(flush_ctrl)
@@ -351,7 +351,7 @@ reg_arstn_en #(
    .clk(clk),
    .arst_n(arst_n),
    .en(enable && IF_ID_write),
-   .din(alu_src),
+   .din(alu_src_haz_out),
    .dout(alu_src_ID_EX)
 );
 
@@ -361,7 +361,7 @@ reg_arstn_en #(
    .clk(clk),
    .arst_n(arst_n),
    .en(enable && IF_ID_write),
-   .din(alu_op),
+   .din(alu_op_haz_out),
    .dout(alu_op_ID_EX)
 );
 
@@ -371,7 +371,7 @@ reg_arstn_en #(
    .clk(clk),
    .arst_n(arst_n),
    .en(enable && IF_ID_write),
-   .din(mem_write),
+   .din(mem_write_haz_out),
    .dout(mem_write_ID_EX)
 );
 
@@ -381,7 +381,7 @@ reg_arstn_en #(
    .clk(clk),
    .arst_n(arst_n),
    .en(enable && IF_ID_write),
-   .din(mem_read),
+   .din(mem_read_haz_out),
    .dout(mem_read_ID_EX)
 );
 
@@ -391,7 +391,7 @@ reg_arstn_en #(
    .clk(clk),
    .arst_n(arst_n),
    .en(enable && IF_ID_write),
-   .din(jump),
+   .din(jump_haz_out),
    .dout(jump_ID_EX)
 );
 reg_arstn_en #(
@@ -400,7 +400,7 @@ reg_arstn_en #(
    .clk(clk),
    .arst_n(arst_n),
    .en(enable && IF_ID_write),
-   .din(branch),
+   .din(branch_haz_out),
    .dout(branch_ID_EX)
 );
 
@@ -410,7 +410,7 @@ reg_arstn_en #(
    .clk(clk),
    .arst_n(arst_n),
    .en(enable && IF_ID_write),
-   .din(reg_write),
+   .din(reg_write_haz_out),
    .dout(reg_write_ID_EX)
 );
 
@@ -420,7 +420,7 @@ reg_arstn_en #(
    .clk(clk),
    .arst_n(arst_n),
    .en(enable && IF_ID_write),
-   .din(mem_2_reg),
+   .din(mem_2_reg_haz_out),
    .dout(mem_2_reg_ID_EX)
 );
 
