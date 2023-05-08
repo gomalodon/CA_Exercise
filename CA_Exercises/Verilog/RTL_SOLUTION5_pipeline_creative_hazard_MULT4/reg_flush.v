@@ -15,7 +15,9 @@ module reg_flush#(
 reg [DATA_W-1:0] r,nxt;
 
 always@(posedge clk, negedge arst_n)begin
-   if(arst_n==0 || flush) begin
+   if(arst_n==0) begin
+      r <= PRESET_VAL;
+   end else if (flush) begin
       r <= PRESET_VAL;
    end else begin
       r <= nxt;
