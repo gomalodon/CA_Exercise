@@ -13,9 +13,9 @@ K_CHECK: beq x22, x12, K_END
 C_CHECK: beq x21, x11, C_END
 ld x4, 0(x25) # load 1 input data
 ld x5, 0(x26) # load 1 weight data
+addi x21, x21, 1 # C loop index +1
 mul x6, x4, x5 # multiply the input with the weight
 add x7, x7, x6 # accumulate the result
-addi x21, x21, 1 # C loop index +1
 addi x25, x25, 8 # input's 64-bit word address +1
 addi x26, x26, 8 # weight's 64-bit word address +1
 jal C_CHECK

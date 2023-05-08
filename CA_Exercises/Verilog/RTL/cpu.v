@@ -40,7 +40,7 @@ module cpu(
 
 wire              zero_flag;
 wire [      63:0] branch_pc,updated_pc,current_pc,jump_pc, pc_IF_ID, pc_ID_EX;
-wire [      31:0] instruction, instruction_IF_ID;
+wire [      31:0] instruction, instruction_IF_ID, instruction_ID_EX;
 wire [       1:0] alu_op, alu_op_ID_EX, forwardA, forwardB;
 wire [       3:0] alu_control;
 wire              reg_dst,branch,mem_read,mem_2_reg,
@@ -120,7 +120,7 @@ reg_flush #(
 ) IF_ID_instruction(
    .clk(clk),
    .arst_n(arst_n),
-   .en(enable),
+   .en(enable && pc_write),
    .flush(IF_flush),
    .din(instruction),
    .dout(instruction_IF_ID)
@@ -131,7 +131,7 @@ reg_flush #(
 ) IF_ID_pc(
    .clk(clk),
    .arst_n(arst_n),
-   .en(enable),
+   .en(enable && pc_write),
    .flush(IF_flush),
    .din(updated_pc),
    .dout(pc_IF_ID)
@@ -181,7 +181,7 @@ reg_flush #(
    .clk(clk),
    .arst_n(arst_n),
    .en(enable),
-   .flush(1'b0),
+   .flush(!pc_write),
    .din(pc_IF_ID),
    .dout(pc_ID_EX)
 );
@@ -192,7 +192,7 @@ reg_flush #(
    .clk(clk),
    .arst_n(arst_n),
    .en(enable),
-   .flush(1'b0),
+   .flush(!pc_write),
    .din(regfile_rdata_1),
    .dout(rdata1_ID_EX)
 );
@@ -203,7 +203,7 @@ reg_flush #(
    .clk(clk),
    .arst_n(arst_n),
    .en(enable),
-   .flush(1'b0),
+   .flush(!pc_write),
    .din(regfile_rdata_2),
    .dout(rdata2_ID_EX)
 );
@@ -214,7 +214,7 @@ reg_flush #(
    .clk(clk),
    .arst_n(arst_n),
    .en(enable),
-   .flush(1'b0),
+   .flush(!pc_write),
    .din(immediate_extended),
    .dout(immediate_ID_EX)
 );
@@ -225,7 +225,7 @@ reg_flush #(
    .clk(clk),
    .arst_n(arst_n),
    .en(enable),
-   .flush(1'b0),
+   .flush(!pc_write),
    .din(instruction_IF_ID[31:25]),
    .dout(func7_ID_EX)
 );
@@ -236,7 +236,7 @@ reg_flush #(
    .clk(clk),
    .arst_n(arst_n),
    .en(enable),
-   .flush(1'b0),
+   .flush(!pc_write),
    .din(instruction_IF_ID[14:12]),
    .dout(func3_ID_EX)
 );
@@ -247,7 +247,7 @@ reg_flush #(
    .clk(clk),
    .arst_n(arst_n),
    .en(enable),
-   .flush(1'b0),
+   .flush(!pc_write),
    .din(instruction_IF_ID[19:15]),
    .dout(rs1_ID_EX)
 );
@@ -258,7 +258,7 @@ reg_flush #(
    .clk(clk),
    .arst_n(arst_n),
    .en(enable),
-   .flush(1'b0),
+   .flush(!pc_write),
    .din(instruction_IF_ID[24:20]),
    .dout(rs2_ID_EX)
 );
@@ -269,7 +269,7 @@ reg_flush #(
    .clk(clk),
    .arst_n(arst_n),
    .en(enable),
-   .flush(1'b0),
+   .flush(!pc_write),
    .din(instruction_IF_ID[11:7]),
    .dout(dest_addr_ID_EX)
 );
@@ -281,7 +281,7 @@ reg_flush #(
    .clk(clk),
    .arst_n(arst_n),
    .en(enable),
-   .flush(flush_ctrl),
+   .flush(flush_ctrl || !pc_write),
    .din(alu_src),
    .dout(alu_src_ID_EX)
 );
@@ -292,7 +292,7 @@ reg_flush #(
    .clk(clk),
    .arst_n(arst_n),
    .en(enable),
-   .flush(flush_ctrl),
+   .flush(flush_ctrl || !pc_write),
    .din(alu_op),
    .dout(alu_op_ID_EX)
 );
@@ -303,7 +303,7 @@ reg_flush #(
    .clk(clk),
    .arst_n(arst_n),
    .en(enable),
-   .flush(flush_ctrl),
+   .flush(flush_ctrl || !pc_write),
    .din(mem_write),
    .dout(mem_write_ID_EX)
 );
@@ -314,7 +314,7 @@ reg_flush #(
    .clk(clk),
    .arst_n(arst_n),
    .en(enable),
-   .flush(flush_ctrl),
+   .flush(flush_ctrl || !pc_write),
    .din(mem_read),
    .dout(mem_read_ID_EX)
 );
@@ -325,7 +325,7 @@ reg_flush #(
    .clk(clk),
    .arst_n(arst_n),
    .en(enable),
-   .flush(flush_ctrl),
+   .flush(flush_ctrl || !pc_write),
    .din(jump),
    .dout(jump_ID_EX)
 );
@@ -335,7 +335,7 @@ reg_flush #(
    .clk(clk),
    .arst_n(arst_n),
    .en(enable),
-   .flush(flush_ctrl),
+   .flush(flush_ctrl || !pc_write),
    .din(branch),
    .dout(branch_ID_EX)
 );
@@ -346,7 +346,7 @@ reg_flush #(
    .clk(clk),
    .arst_n(arst_n),
    .en(enable),
-   .flush(flush_ctrl),
+   .flush(flush_ctrl || !pc_write),
    .din(reg_write),
    .dout(reg_write_ID_EX)
 );
@@ -357,7 +357,7 @@ reg_flush #(
    .clk(clk),
    .arst_n(arst_n),
    .en(enable),
-   .flush(flush_ctrl),
+   .flush(flush_ctrl || !pc_write),
    .din(mem_2_reg),
    .dout(mem_2_reg_ID_EX)
 );
