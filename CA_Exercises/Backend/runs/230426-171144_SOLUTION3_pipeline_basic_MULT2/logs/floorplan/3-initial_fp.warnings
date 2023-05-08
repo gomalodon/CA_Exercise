@@ -1,2 +1,0 @@
-[WARNING ODB-0220] WARNING (LEFPARS-2036): SOURCE statement is obsolete in version 5.6 and later.
-To avoid this warning in the future, remove this statement from the LEF file with version 5.6 or later. See file /users/students/r0790882/Documents/CA_Exercise/CA_Exercises/Backend/runs/230426-171144_SOLUTION3_pipeline_basic_MULT2/tmp/merged.nom.lef at line 67040.

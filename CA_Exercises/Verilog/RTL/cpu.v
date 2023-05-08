@@ -39,8 +39,8 @@ module cpu(
    );
 
 wire              zero_flag;
-wire [      63:0] branch_pc,updated_pc,current_pc,jump_pc, pc_IF_ID, pc_ID_EX;
-wire [      31:0] instruction, instruction_IF_ID;
+wire [      63:0] branch_pc,updated_pc,current_pc,jump_pc, pc_IF_ID, pc_ID_EX, IF_ID_pc_input;
+wire [      31:0] instruction, instruction_IF_ID, IF_ID_instruction_input;
 wire [       1:0] alu_op, alu_op_haz_out, alu_op_ID_EX, forwardA, forwardB;
 wire [       3:0] alu_control;
 wire              reg_dst,branch,mem_read,mem_2_reg,
@@ -117,13 +117,31 @@ sram_BW32 #(
    .rdata_ext(rdata_ext     )
 );
 
+mux_2 #(
+   .DATA_W(32)
+) mux_flush_instruction (
+   .input_a (32'b0),
+   .input_b (instruction),
+   .select_a(IF_flush),
+   .mux_out (IF_ID_instruction_input)
+);
+
+mux_2 #(
+   .DATA_W(64)
+) mux_flush_pc (
+   .input_a (64'b0),
+   .input_b (current_pc),
+   .select_a(IF_flush),
+   .mux_out (IF_ID_pc_input)
+);
+
 reg_arstn_en #(
    .DATA_W(32)
 ) IF_ID_instruction(
    .clk(clk),
-   .arst_n(arst_n && !IF_flush),
+   .arst_n(arst_n),
    .en(enable && IF_ID_write),
-   .din(instruction),
+   .din(IF_ID_instruction_input),
    .dout(instruction_IF_ID)
 );
 
@@ -133,7 +151,7 @@ reg_arstn_en #(
    .clk(clk),
    .arst_n(arst_n && !IF_flush),
    .en(enable && IF_ID_write),
-   .din(current_pc),
+   .din(IF_ID_pc_input),
    .dout(pc_IF_ID)
 );
 
