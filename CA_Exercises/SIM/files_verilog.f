@@ -7,6 +7,7 @@
 ../Verilog/RTL/mux_2.v
 ../Verilog/RTL/pc.v
 ../Verilog/RTL/reg_arstn.v
+../Verilog/RTL/reg_flush.v
 ../Verilog/RTL/reg_arstn_en.v
 ../Verilog/RTL/register_file.v
 ../Verilog/RTL/sram.v

@@ -53,7 +53,7 @@ module register_file#(
       end
    end
 
-   always@(posedge clk, negedge arst_n) begin
+   always@(negedge clk, negedge arst_n) begin
       if(arst_n == 1'b0)begin
          for(idx=0; idx<N_REG; idx =idx+1)begin
             reg_array[idx] <= 'b0;

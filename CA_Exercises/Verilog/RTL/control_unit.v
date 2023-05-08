@@ -69,7 +69,7 @@ module control_unit(
                   branch    = branch_flag ? 1'b1 : 1'b0;
                   alu_op    = SUB_OPCODE;
                   jump      = 1'b0;
-                  IF_flush  = 1'b1;
+                  IF_flush  = branch_flag ? 1'b1 : 1'b0;
                end
 
          JUMP:begin
